@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="TemplateMo">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+
+    <title>VIP Website</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="assets/css/fontawesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-edu-meeting.css">
+    <link rel="stylesheet" href="assets/css/owl.css">
+    <link rel="stylesheet" href="assets/css/lightbox.css">
+  </head>
+
+<body>
+
+
+
+   <!-- ***** Header Area Start ***** -->
+   <header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="index.html" class="logo">
+                        NAME
+                    </a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                        <li class="scroll-to-section"><a href="#top">Home</a></li>
+                        <li class="has-sub">
+                            <a href="javascript:void(0)">Image Analysis</a>
+                            <ul class="sub-menu">
+                                <li><a href="handSignRecognizer.html" class="active">Hand Sign Recognizer</a></li>
+                                <li><a href="sketchYourself.html">Sketch Yourself</a></li>
+                                <li><a href="facialSentimentAnalysis.html">Facial Sentiment Analyzer</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-sub">
+                            <a href="javascript:void(0)">Machine Learning Detectors</a>
+                            <ul class="sub-menu">
+                                <li><a href="handDetector.html">Hand Detector</a></li>
+                                <li><a href="poseDetector.html">Pose Detector</a></li>
+                                <li><a href="objectClassifier.html">Object Classifier</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-sub">
+                            <a href="javascript:void(0)">COVID Special</a>
+                            <ul class="sub-menu">
+                                <li><a href="maskDetector.html">Mask Detector</a></li>
+                                <li><a href="screeningChecker.html">Screening Checker</a></li>
+                                <li><a href="socialDistancingTracker.html">Social Distancing Tracker</a></li>
+                            </ul>
+                        </li> 
+                        <li class="sub-menu">
+                            <a href="about.html">About</a> <li>
+                    </ul>        
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                    <!-- ***** Menu End ***** -->
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- ***** Header Area End ***** -->
+
+  <section class="heading-page header-text" id="top">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h6>Image Analysis</h6>
+          <h2>Hand Sign Recognizer</h2>
+          <p style="color: white;"></p> 
+        </div>
+      </div>
+    </div>
+  </section>
+
+     	<style type="text/css">
+
+    		html,
+    		body,
+    		iframe {
+    			margin: 0px;
+    			padding: 0px;
+    			height: 50vw;
+    			border: none;
+    		}	
+    		iframe {
+    			display: block;
+    			width: 100%;
+    			border: none;
+    			overflow-y: hidden;
+    			overflow-x: hidden;
+    		}
+    	</style>
+    <iframe allow="camera;" src="https://handdetector.herokuapp.com/"
+    			frameborder="0"
+    			marginheight="0"
+    			marginwidth="0"
+    			width="100%"
+    			height="50vw">
+    </iframe>
+
+  <!-- Scripts -->
+  <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="assets/js/isotope.min.js"></script>
+    <script src="assets/js/owl-carousel.js"></script>
+    <script src="assets/js/lightbox.js"></script>
+    <script src="assets/js/tabs.js"></script>
+    <script src="assets/js/video.js"></script>
+    <script src="assets/js/slick-slider.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <script>
+        //according to loftblog tut
+        $('.nav li:first').addClass('active');
+
+        var showSection = function showSection(section, isAnimate) {
+          var
+          direction = section.replace(/#/, ''),
+          reqSection = $('.section').filter('[data-section="' + direction + '"]'),
+          reqSectionPos = reqSection.offset().top - 0;
+
+          if (isAnimate) {
+            $('body, html').animate({
+              scrollTop: reqSectionPos },
+            800);
+          } else {
+            $('body, html').scrollTop(reqSectionPos);
+          }
+
+        };
+
+        var checkSection = function checkSection() {
+          $('.section').each(function () {
+            var
+            $this = $(this),
+            topEdge = $this.offset().top - 80,
+            bottomEdge = topEdge + $this.height(),
+            wScroll = $(window).scrollTop();
+            if (topEdge < wScroll && bottomEdge > wScroll) {
+              var
+              currentId = $this.data('section'),
+              reqLink = $('a').filter('[href*=\\#' + currentId + ']');
+              reqLink.closest('li').addClass('active').
+              siblings().removeClass('active');
+            }
+          });
+        };
+
+        $('.main-menu, .responsive-menu, .scroll-to-section').on('click', 'a', function (e) {
+          e.preventDefault();
+          showSection($(this).attr('href'), true);
+        });
+
+        $(window).scroll(function () {
+          checkSection();
+        });
+    </script>
+</body>
+
+
+  </body>
+
+</html>
