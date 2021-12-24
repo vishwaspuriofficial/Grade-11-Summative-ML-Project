@@ -6,7 +6,7 @@ faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontal
 
 # st.set_page_config(layout="wide")
 col = st.empty()
-
+#remove
 mpHands = mp.solutions.hands
 hands = mpHands.Hands()
 mpDraw = mp.solutions.drawing_utils
