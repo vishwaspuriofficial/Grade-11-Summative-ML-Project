@@ -34,7 +34,7 @@
 # RTC_CONFIGURATION = RTCConfiguration(
 #     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 # )
-#
+
 # def webcam(page):
 #
 #     class OpenCVVideoProcessor(VideoProcessorBase):
@@ -223,36 +223,31 @@
 #     st.warning("Camera might take time to load! Please be patient!")
 # except:
 #     pass
-#
-#
-#
-#
-#
-# # import cv2
-# # from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
-# #
-# #
-# # class VideoTransformer(VideoTransformerBase):
-# #     def transform(self, frame):
-# #         img = frame.to_ndarray(format="bgr24")
-# #
-# #         img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
-# #
-# #         return img
-# #
-# #
-# # webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
+
+
+
+
+
 
 import streamlit as st
 import mediapipe as mp
 import cv2
-st.set_page_config(layout="wide")
-col = st.empty()
+# from deepface import DeepFace
+faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
+# st.set_page_config(layout="wide")
+col = st.empty()
+#remove
+mpHands = mp.solutions.hands
+hands = mpHands.Hands()
+mpDraw = mp.solutions.drawing_utils
 
 mpPose = mp.solutions.pose
 pose = mpPose.Pose()
 mpDraw = mp.solutions.drawing_utils
+
+noseCascade = cv2.CascadeClassifier("haarcascade_mcs_nose.xml")
+mouthCascade = cv2.CascadeClassifier("haarcascade_mcs_mouth.xml")
 
 from streamlit_webrtc import (
     AudioProcessorBase,
@@ -279,6 +274,17 @@ st.write("If camera doesn't turn on, click the select device button, change the 
 
 
 
+
+def handDetector():
+    class OpenCVVideoProcessor(VideoProcessorBase):
+        def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
+            img = frame.to_ndarray(format="bgr24")
+            imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            results = hands.process(imgRGB)
+
+            if results.multi_hand_landmarks:
+                for handLms in results.multi_hand_landmarks:
+                    mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
 def maskDetector():
     class OpenCVVideoProcessor(VideoProcessorBase):
         def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
@@ -308,5 +314,24 @@ def maskDetector():
         },
     )
 
+def app():
+    page = ""
+    pages = ['handDetector', 'maskDetector', 'poseDetector', 'handSignRecognizer', 'facialSentimentAnalysis',
+             'sketchYourself']
+    try:
+        query_params = st.experimental_get_query_params()
+        page = query_params['page'][0]
+        if page == "handDetector":
+            handDetector()
+        elif page == "maskDetector":
+            maskDetector()
+        else:
+            st.header("404 Error! Page Not Found!")
+
+
+        st.warning("Camera might take time to load! Please be patient!")
+    except:
+        pass
+
 if __name__ == "__main__":
-    maskDetector()
+    app()
