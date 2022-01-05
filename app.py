@@ -218,7 +218,7 @@ try:
     page = query_params['page'][0]
     if not page in pages:
         st.header("404 Error! Page Not Found!")
-        raise
+
     webcam(page)
     st.warning("Camera might take time to load! Please be patient!")
 except:
