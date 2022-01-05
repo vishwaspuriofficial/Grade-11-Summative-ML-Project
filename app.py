@@ -17,7 +17,6 @@
 #
 # noseCascade = cv2.CascadeClassifier("haarcascade_mcs_nose.xml")
 # mouthCascade = cv2.CascadeClassifier("haarcascade_mcs_mouth.xml")
-#  q
 # from streamlit_webrtc import (
 #     AudioProcessorBase,
 #     RTCConfiguration,
