@@ -275,44 +275,6 @@ st.write("If camera doesn't turn on, click the select device button, change the 
 
 
 
-def handDetector():
-    class OpenCVVideoProcessor(VideoProcessorBase):
-        def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
-            img = frame.to_ndarray(format="bgr24")
-            imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            results = hands.process(imgRGB)
-
-            if results.multi_hand_landmarks:
-                for handLms in results.multi_hand_landmarks:
-                    mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
-def maskDetector():
-    class OpenCVVideoProcessor(VideoProcessorBase):
-        def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
-            img = frame.to_ndarray(format="bgr24")
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            nose = noseCascade.detectMultiScale(gray, 1.3, 5)
-            mouth = mouthCascade.detectMultiScale(gray, 1.3, 5)
-            cv2.rectangle(img, pt1=(0, 0), pt2=(700, 80), color=(0, 0, 0), thickness=-1)
-            if len(nose) != 0 and len(mouth) != 0:
-                cv2.putText(img, "Not Wearing Mask", (20, 50), cv2.FONT_HERSHEY_DUPLEX, 1, 255)
-            else:
-                cv2.putText(img, "Good, Wearing Mask!", (20, 50), cv2.FONT_HERSHEY_DUPLEX,1, 255)
-            return av.VideoFrame.from_ndarray(img, format="bgr24")
-
-
-    webrtc_ctx = webrtc_streamer(
-        key="opencv-filter",
-        mode=WebRtcMode.SENDRECV,
-        rtc_configuration=RTC_CONFIGURATION,
-        video_processor_factory=OpenCVVideoProcessor,
-        media_stream_constraints={"video": True, "audio": False},
-        async_processing=True,
-        video_html_attrs={
-            "style": {"margin": "0 auto", "border": "5px yellow solid"},
-            "controls": False,
-            "autoPlay": True,
-        },
-    )
 
 def app():
     page = ""
@@ -322,9 +284,55 @@ def app():
         query_params = st.experimental_get_query_params()
         page = query_params['page'][0]
         if page == "handDetector":
-            handDetector()
+            class OpenCVVideoProcessor(VideoProcessorBase):
+                def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
+                    img = frame.to_ndarray(format="bgr24")
+                    imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                    results = hands.process(imgRGB)
+
+                    if results.multi_hand_landmarks:
+                        for handLms in results.multi_hand_landmarks:
+                            mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
+            webrtc_ctx = webrtc_streamer(
+                key="opencv-filter",
+                mode=WebRtcMode.SENDRECV,
+                rtc_configuration=RTC_CONFIGURATION,
+                video_processor_factory=OpenCVVideoProcessor,
+                media_stream_constraints={"video": True, "audio": False},
+                async_processing=True,
+                video_html_attrs={
+                    "style": {"margin": "0 auto", "border": "5px yellow solid"},
+                    "controls": False,
+                    "autoPlay": True,
+                },
+            )
         elif page == "maskDetector":
-            maskDetector()
+            class OpenCVVideoProcessor(VideoProcessorBase):
+                def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
+                    img = frame.to_ndarray(format="bgr24")
+                    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                    nose = noseCascade.detectMultiScale(gray, 1.3, 5)
+                    mouth = mouthCascade.detectMultiScale(gray, 1.3, 5)
+                    cv2.rectangle(img, pt1=(0, 0), pt2=(700, 80), color=(0, 0, 0), thickness=-1)
+                    if len(nose) != 0 and len(mouth) != 0:
+                        cv2.putText(img, "Not Wearing Mask", (20, 50), cv2.FONT_HERSHEY_DUPLEX, 1, 255)
+                    else:
+                        cv2.putText(img, "Good, Wearing Mask!", (20, 50), cv2.FONT_HERSHEY_DUPLEX, 1, 255)
+                    return av.VideoFrame.from_ndarray(img, format="bgr24")
+
+            webrtc_ctx = webrtc_streamer(
+                key="opencv-filter",
+                mode=WebRtcMode.SENDRECV,
+                rtc_configuration=RTC_CONFIGURATION,
+                video_processor_factory=OpenCVVideoProcessor,
+                media_stream_constraints={"video": True, "audio": False},
+                async_processing=True,
+                video_html_attrs={
+                    "style": {"margin": "0 auto", "border": "5px yellow solid"},
+                    "controls": False,
+                    "autoPlay": True,
+                },
+            )
         else:
             st.header("404 Error! Page Not Found!")
 
